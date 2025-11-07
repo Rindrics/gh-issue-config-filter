@@ -14,8 +14,13 @@ type Issue struct {
 	CreationMonths []int  `yaml:"creation_months"`
 }
 
+type IssueToCreate struct {
+	Issue  Issue
+	Fields map[string]string
+}
+
 type IssuesToCreate struct {
-	Issues []Issue
+	Issues []IssueToCreate
 }
 
 func (i *IssuesToCreate) Equals(other IssuesToCreate) bool {

@@ -39,7 +39,9 @@ func TestGetIssuesToCreate(t *testing.T) {
 			issues: []Issue{issue1},
 			month:  1,
 			issuesToCreate: IssuesToCreate{
-				Issues: []Issue{issue1},
+				Issues: []IssueToCreate{
+					{Issue: issue1},
+				},
 			},
 		},
 		{
@@ -47,7 +49,10 @@ func TestGetIssuesToCreate(t *testing.T) {
 			issues: []Issue{issue1, issue1_3, issue2_4},
 			month:  1,
 			issuesToCreate: IssuesToCreate{
-				Issues: []Issue{issue1, issue1_3},
+				Issues: []IssueToCreate{
+					{Issue: issue1},
+					{Issue: issue1_3},
+				},
 			},
 		},
 		{
@@ -55,7 +60,10 @@ func TestGetIssuesToCreate(t *testing.T) {
 			issues: []Issue{issue2, issue1_3, issue2_4},
 			month:  2,
 			issuesToCreate: IssuesToCreate{
-				Issues: []Issue{issue2, issue2_4},
+				Issues: []IssueToCreate{
+					{Issue: issue2},
+					{Issue: issue2_4},
+				},
 			},
 		},
 	}
