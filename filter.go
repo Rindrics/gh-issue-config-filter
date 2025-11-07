@@ -1,13 +1,24 @@
 package main
 
-func GetIssuesToCreate(candidates []Issue, month int) IssuesToCreate {
+func GetIssuesToCreate(config Config, month int) IssuesToCreate {
 	issuesToCreate := IssuesToCreate{
 		Issues: []IssueToCreate{},
 	}
 
-	for _, candidate := range candidates {
+	for _, candidate := range config.Issues {
 		if candidate.IsCreationMonth(month) {
-			issuesToCreate.Issues = append(issuesToCreate.Issues, IssueToCreate{Issue: candidate})
+			issueToCreate := IssueToCreate{Issue: candidate}
+			if candidate.ProjectID != "" {
+				issueToCreate.ProjectID = candidate.ProjectID
+			} else {
+				issueToCreate.ProjectID = config.Defaults.ProjectID
+			}
+			if candidate.TargetRepo != "" {
+				issueToCreate.TargetRepo = candidate.TargetRepo
+			} else {
+				issueToCreate.TargetRepo = config.Defaults.TargetRepo
+			}
+			issuesToCreate.Issues = append(issuesToCreate.Issues, issueToCreate)
 		}
 	}
 	return issuesToCreate

@@ -5,18 +5,28 @@ import (
 	"slices"
 )
 
+type Defaults struct {
+	ProjectID  string `yaml:"project_id"`
+	TargetRepo string `yaml:"target_repo"`
+}
+
 type Config struct {
-	Issues []Issue `yaml:"issues"`
+	Defaults Defaults `yaml:"defaults"`
+	Issues   []Issue  `yaml:"issues"`
 }
 
 type Issue struct {
 	Name           string `yaml:"name"`
 	CreationMonths []int  `yaml:"creation_months"`
+	ProjectID      string `yaml:"issue.project_id"`
+	TargetRepo     string `yaml:"issue.target_repo"`
 }
 
 type IssueToCreate struct {
-	Issue  Issue
-	Fields map[string]string
+	Issue      Issue
+	Fields     map[string]string
+	ProjectID  string
+	TargetRepo string
 }
 
 type IssuesToCreate struct {

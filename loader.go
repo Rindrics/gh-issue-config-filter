@@ -26,7 +26,6 @@ func LoadConfig(configFile string) (Config, error) {
 		return config, nil
 	}
 
-	log.Println("loaded config file: ", &config.Issues)
+	log.Println("loaded config file: ", &config)
 	return config, nil
 }
-

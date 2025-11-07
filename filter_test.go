@@ -5,6 +5,10 @@ import (
 )
 
 func TestGetIssuesToCreate(t *testing.T) {
+	defaults := Defaults{
+		ProjectID:  "default_project_id",
+		TargetRepo: "default/repo",
+	}
 	issue1 := Issue{
 		Name:           "Issue 1",
 		CreationMonths: []int{1},
@@ -21,55 +25,110 @@ func TestGetIssuesToCreate(t *testing.T) {
 		Name:           "Issue 2_4",
 		CreationMonths: []int{2, 4},
 	}
+	issue_project_repo := Issue{
+		Name:           "Issue project_repo",
+		CreationMonths: []int{1},
+		ProjectID:      "other_project_id",
+		TargetRepo:     "other/repo",
+	}
 
 	cases := []struct {
 		name           string
-		issues         []Issue
+		config         Config
 		month          int
 		issuesToCreate IssuesToCreate
 	}{
 		{
-			name:           "No issues",
-			issues:         []Issue{},
+			name: "No issues",
+			config: Config{
+				Defaults: defaults,
+				Issues:   []Issue{},
+			},
 			month:          1,
 			issuesToCreate: IssuesToCreate{},
 		},
 		{
-			name:   "One issue",
-			issues: []Issue{issue1},
-			month:  1,
+			name: "One issue",
+			config: Config{
+				Defaults: defaults,
+				Issues:   []Issue{issue1},
+			},
+			month: 1,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{Issue: issue1},
+					{
+						Issue:      issue1,
+						ProjectID:  "default_project_id",
+						TargetRepo: "default/repo",
+					},
 				},
 			},
 		},
 		{
-			name:   "January issues",
-			issues: []Issue{issue1, issue1_3, issue2_4},
-			month:  1,
+			name: "January issues",
+			config: Config{
+				Defaults: defaults,
+				Issues:   []Issue{issue1, issue1_3, issue2_4},
+			},
+			month: 1,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{Issue: issue1},
-					{Issue: issue1_3},
+					{
+						Issue:      issue1,
+						ProjectID:  "default_project_id",
+						TargetRepo: "default/repo",
+					},
+					{
+						Issue:      issue1_3,
+						ProjectID:  "default_project_id",
+						TargetRepo: "default/repo",
+					},
 				},
 			},
 		},
 		{
-			name:   "February issues",
-			issues: []Issue{issue2, issue1_3, issue2_4},
-			month:  2,
+			name: "February issues",
+			config: Config{
+				Defaults: defaults,
+				Issues:   []Issue{issue2, issue1_3, issue2_4},
+			},
+			month: 2,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{Issue: issue2},
-					{Issue: issue2_4},
+					{
+						Issue:      issue2,
+						ProjectID:  "default_project_id",
+						TargetRepo: "default/repo",
+					},
+					{
+						Issue:      issue2_4,
+						ProjectID:  "default_project_id",
+						TargetRepo: "default/repo",
+					},
+				},
+			},
+		},
+		{
+			name: "Override defaults",
+			config: Config{
+				Defaults: defaults,
+				Issues:   []Issue{issue_project_repo},
+			},
+			month: 1,
+			issuesToCreate: IssuesToCreate{
+				Issues: []IssueToCreate{
+					{
+						Issue:      issue_project_repo,
+						ProjectID:  "other_project_id",
+						TargetRepo: "other/repo",
+					},
 				},
 			},
 		},
 	}
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetIssuesToCreate(tt.issues, tt.month)
+			got := GetIssuesToCreate(tt.config, tt.month)
 			if !got.Equals(tt.issuesToCreate) {
 				t.Errorf("expected %v, got %v", tt.issuesToCreate, got)
 			}

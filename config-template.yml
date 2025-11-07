@@ -16,3 +16,5 @@ issues:
     fields:
       priority: "2"
       status: "Backlog"
+    project_id: "other_project_id"
+    target_repo: "other/repo"
