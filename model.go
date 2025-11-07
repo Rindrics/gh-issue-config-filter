@@ -15,11 +15,28 @@ type Config struct {
 	Issues   []Issue  `yaml:"issues"`
 }
 
+type Month int
+
+const (
+	January   Month = 1
+	February  Month = 2
+	March     Month = 3
+	April     Month = 4
+	May       Month = 5
+	June      Month = 6
+	July      Month = 7
+	August    Month = 8
+	September Month = 9
+	October   Month = 10
+	November  Month = 11
+	December  Month = 12
+)
+
 type Issue struct {
-	Name           string `yaml:"name"`
-	CreationMonths []int  `yaml:"creation_months"`
-	ProjectID      string `yaml:"issue.project_id"`
-	TargetRepo     string `yaml:"issue.target_repo"`
+	Name           string  `yaml:"name"`
+	CreationMonths []Month `yaml:"creation_months"`
+	ProjectID      string  `yaml:"issue.project_id"`
+	TargetRepo     string  `yaml:"issue.target_repo"`
 }
 
 type IssueToCreate struct {
@@ -40,6 +57,6 @@ func (i *IssuesToCreate) Equals(other IssuesToCreate) bool {
 	return reflect.DeepEqual(i.Issues, other.Issues)
 }
 
-func (i *Issue) IsCreationMonth(month int) bool {
+func (i *Issue) IsCreationMonth(month Month) bool {
 	return slices.Contains(i.CreationMonths, month)
 }

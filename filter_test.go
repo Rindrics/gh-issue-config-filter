@@ -11,23 +11,23 @@ func TestGetIssuesToCreate(t *testing.T) {
 	}
 	issue1 := Issue{
 		Name:           "Issue 1",
-		CreationMonths: []int{1},
+		CreationMonths: []Month{1},
 	}
 	issue2 := Issue{
 		Name:           "Issue 2",
-		CreationMonths: []int{2},
+		CreationMonths: []Month{2},
 	}
 	issue1_3 := Issue{
 		Name:           "Issue 1_3",
-		CreationMonths: []int{1, 3},
+		CreationMonths: []Month{1, 3},
 	}
 	issue2_4 := Issue{
 		Name:           "Issue 2_4",
-		CreationMonths: []int{2, 4},
+		CreationMonths: []Month{2, 4},
 	}
 	issue_project_repo := Issue{
 		Name:           "Issue project_repo",
-		CreationMonths: []int{1},
+		CreationMonths: []Month{1},
 		ProjectID:      "other_project_id",
 		TargetRepo:     "other/repo",
 	}
@@ -35,7 +35,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 	cases := []struct {
 		name           string
 		config         Config
-		month          int
+		month          Month
 		issuesToCreate IssuesToCreate
 	}{
 		{
@@ -44,7 +44,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 				Defaults: defaults,
 				Issues:   []Issue{},
 			},
-			month:          1,
+			month:          Month(1),
 			issuesToCreate: IssuesToCreate{},
 		},
 		{
@@ -53,7 +53,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 				Defaults: defaults,
 				Issues:   []Issue{issue1},
 			},
-			month: 1,
+			month: Month(1),
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
 					{
@@ -70,7 +70,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 				Defaults: defaults,
 				Issues:   []Issue{issue1, issue1_3, issue2_4},
 			},
-			month: 1,
+			month: Month(1),
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
 					{
@@ -92,7 +92,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 				Defaults: defaults,
 				Issues:   []Issue{issue2, issue1_3, issue2_4},
 			},
-			month: 2,
+			month: Month(2),
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
 					{
@@ -114,7 +114,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 				Defaults: defaults,
 				Issues:   []Issue{issue_project_repo},
 			},
-			month: 1,
+			month: Month(1),
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
 					{

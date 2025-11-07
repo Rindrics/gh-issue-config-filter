@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -28,4 +29,11 @@ func LoadConfig(configFile string) (Config, error) {
 
 	log.Println("loaded config file: ", &config)
 	return config, nil
+}
+
+func ParseMonth(digit int) (Month, error) {
+	if digit < 1 || digit > 12 {
+		return 0, errors.New("invalid month")
+	}
+	return Month(digit), nil
 }

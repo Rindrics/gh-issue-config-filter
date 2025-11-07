@@ -1,6 +1,6 @@
 package main
 
-func GetIssuesToCreate(config Config, month int) IssuesToCreate {
+func GetIssuesToCreate(config Config, month Month) IssuesToCreate {
 	issuesToCreate := IssuesToCreate{
 		Issues: []IssueToCreate{},
 	}
