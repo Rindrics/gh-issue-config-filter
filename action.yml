@@ -31,7 +31,7 @@ runs:
       id: filter
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
         MONTH=$(date +%m | sed 's/^0//')
         ./gh-issue-config-filter/bin/gh-issue-config-filter --month $MONTH --config "${{ inputs.config }}" > issues.json
@@ -40,7 +40,7 @@ runs:
     - name: Create issues and register to projects
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
         echo '${{ steps.filter.outputs.issues }}' | jq -c '.[]' | while read issue; do
           TEMPLATE=$(echo $issue | jq -r '.template_file')
