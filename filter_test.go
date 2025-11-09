@@ -62,11 +62,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 			month: January,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{
-						Issue:      issue1,
-						ProjectID:  stringPtr("default_project_id"),
-						TargetRepo: stringPtr("default/repo"),
-					},
+					NewIssueToCreate(issue1, defaults),
 				},
 			},
 		},
@@ -79,16 +75,8 @@ func TestGetIssuesToCreate(t *testing.T) {
 			month: January,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{
-						Issue:      issue1,
-						ProjectID:  stringPtr("default_project_id"),
-						TargetRepo: stringPtr("default/repo"),
-					},
-					{
-						Issue:      issue1_3,
-						ProjectID:  stringPtr("default_project_id"),
-						TargetRepo: stringPtr("default/repo"),
-					},
+					NewIssueToCreate(issue1, defaults),
+					NewIssueToCreate(issue1_3, defaults),
 				},
 			},
 		},
@@ -101,16 +89,8 @@ func TestGetIssuesToCreate(t *testing.T) {
 			month: February,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{
-						Issue:      issue2,
-						ProjectID:  stringPtr("default_project_id"),
-						TargetRepo: stringPtr("default/repo"),
-					},
-					{
-						Issue:      issue2_4,
-						ProjectID:  stringPtr("default_project_id"),
-						TargetRepo: stringPtr("default/repo"),
-					},
+					NewIssueToCreate(issue2, defaults),
+					NewIssueToCreate(issue2_4, defaults),
 				},
 			},
 		},
@@ -123,11 +103,7 @@ func TestGetIssuesToCreate(t *testing.T) {
 			month: January,
 			issuesToCreate: IssuesToCreate{
 				Issues: []IssueToCreate{
-					{
-						Issue:      issue_project_repo,
-						ProjectID:  &otherProjectID,
-						TargetRepo: &otherRepo,
-					},
+					NewIssueToCreate(issue_project_repo, defaults),
 				},
 			},
 		},
