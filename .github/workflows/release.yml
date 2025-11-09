@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -59,8 +60,7 @@ jobs:
           # Create new latest tag pointing to the latest version
           git tag -f latest "$LATEST_VERSION_TAG"
           
-          # Push using the token
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          # Push the tag (checkout action already configured authentication)
           git push origin latest --force
           
           echo "Updated latest tag to point to $LATEST_VERSION_TAG"
