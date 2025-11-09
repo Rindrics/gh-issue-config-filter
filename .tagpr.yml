@@ -2,9 +2,11 @@ version: 1
 
 release:
   labels:
-    - release
+    - major
+    - minor
   versioning:
     type: semver
+    default: patch
   changelog:
     enabled: true
     format: markdown
