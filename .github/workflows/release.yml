@@ -24,9 +24,37 @@ jobs:
           go-version: '1.25'
 
       - name: Run tagpr
+        id: tagpr
         uses: songmu/tagpr@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           config: .tagpr.yml
+
+      - name: Update latest tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Fetch all tags
+          git fetch --tags
+          
+          # Get the latest tag (most recent version tag)
+          LATEST_VERSION_TAG=$(git tag --sort=-v:refname | grep '^v[0-9]' | head -n 1)
+          
+          if [ -z "$LATEST_VERSION_TAG" ]; then
+            echo "No version tag found, skipping latest tag update"
+            exit 0
+          fi
+          
+          echo "Latest version tag: $LATEST_VERSION_TAG"
+          
+          # Delete existing latest tag if it exists (locally and remotely)
+          git tag -d latest 2>/dev/null || true
+          git push origin :refs/tags/latest 2>/dev/null || true
+          
+          # Create new latest tag pointing to the latest version
+          git tag -f latest "$LATEST_VERSION_TAG"
+          git push origin latest --force
+          
+          echo "Updated latest tag to point to $LATEST_VERSION_TAG"
 
