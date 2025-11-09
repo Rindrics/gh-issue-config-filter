@@ -1,0 +1,11 @@
+issues:
+  exclude-dirs:
+    - bin
+  exclude-use-default: false
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+
