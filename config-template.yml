@@ -26,5 +26,5 @@ issues:
     title_suffix: " - {{Month}}"
     creation_months: [2, 5, 8, 11]
     fields:
-      Priority: "P3"
+      Priority: "P0"
       Status: "Backlog"
