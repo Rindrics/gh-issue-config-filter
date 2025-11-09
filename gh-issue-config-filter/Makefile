@@ -17,6 +17,12 @@ build:
 	@go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PACKAGE)
 	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)"
 
+## demo: Run the binary
+demo: build
+	@echo "Running $(BINARY_NAME)..."
+	@$(BUILD_DIR)/$(BINARY_NAME) --month 1 --config ../config-template.yml
+	@echo "Demo complete"
+
 ## test: Run tests
 test:
 	@echo "Running tests..."
