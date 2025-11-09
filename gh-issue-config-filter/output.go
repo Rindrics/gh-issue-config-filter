@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"text/template"
 	"time"
@@ -12,6 +13,9 @@ import (
 
 func outputJSON(ctx context.Context, issuesToCreate IssuesToCreate, defaults Defaults, ghClient GitHubClient) error {
 	output := make([]IssueOutput, 0, len(issuesToCreate.Issues))
+
+	// Track projects we've already logged
+	loggedProjects := make(map[string]bool)
 
 	for _, issue := range issuesToCreate.Issues {
 		// Get target repo
@@ -24,6 +28,18 @@ func outputJSON(ctx context.Context, issuesToCreate IssuesToCreate, defaults Def
 		projectID := defaults.ProjectID
 		if issue.ProjectID != nil {
 			projectID = *issue.ProjectID
+		}
+
+		// Log project name if not already logged
+		if !loggedProjects[projectID] {
+			projectName, err := ghClient.GetProjectName(ctx, projectID)
+			if err != nil {
+				// Log error but continue
+				log.Printf("Warning: failed to get project name for %s: %v", projectID, err)
+			} else {
+				log.Printf("Project: %s", projectName)
+			}
+			loggedProjects[projectID] = true
 		}
 
 		// Get project fields

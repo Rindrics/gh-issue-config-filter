@@ -11,6 +11,7 @@ import (
 
 type GitHubClient interface {
 	GetProjectFields(ctx context.Context, projectID string, owner string) ([]ProjectField, error)
+	GetProjectName(ctx context.Context, projectID string) (string, error)
 }
 
 type ProjectField struct {
@@ -157,6 +158,40 @@ func (g *githubClient) GetProjectFields(ctx context.Context, projectID string, o
 	}
 
 	return allFields, nil
+}
+
+func (g *githubClient) GetProjectName(ctx context.Context, projectID string) (string, error) {
+	query := fmt.Sprintf(`
+		query {
+			node(id: "%s") {
+				... on ProjectV2 {
+					title
+				}
+			}
+		}
+	`, projectID)
+
+	var result struct {
+		Data struct {
+			Node struct {
+				Title string `json:"title"`
+			} `json:"node"`
+		} `json:"data"`
+	}
+
+	req, err := g.client.NewRequest("POST", "/graphql", map[string]interface{}{
+		"query": query,
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to create GraphQL request: %w", err)
+	}
+
+	_, err = g.client.Do(ctx, req, &result)
+	if err != nil {
+		return "", fmt.Errorf("failed to execute GraphQL query: %w", err)
+	}
+
+	return result.Data.Node.Title, nil
 }
 
 func NewGitHubClientWithHTTPClient(httpClient *http.Client) GitHubClient {
