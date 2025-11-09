@@ -94,6 +94,7 @@ jobs:
       - name: Create recurring backlog items
         uses: Rindrics/recurring-backlog-item-creator@latest
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           config: '.recurrent-backlog-items.yml'
 ```
 
@@ -103,6 +104,7 @@ The workflow runs automatically on the 1st day of each month. You can also trigg
 
 ### Inputs
 
+- `token` (required): GitHub token with appropriate permissions (typically `${{ secrets.GITHUB_TOKEN }}`)
 - `config` (required): Path to the YAML configuration file
 
 ### How It Works
