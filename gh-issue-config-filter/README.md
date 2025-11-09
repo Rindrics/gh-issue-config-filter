@@ -22,7 +22,7 @@ This tool is designed to work with GitHub Projects, allowing you to automaticall
 ## Installation
 
 ```bash
-go install github.com/Rindrics/gh-issue-config-filter@latest
+go install github.com/Rindrics/auto-backlog-manager/gh-issue-config-filter@latest
 ```
 
 Or build from source:
