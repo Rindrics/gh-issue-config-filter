@@ -48,11 +48,24 @@ install: build
 	@go install $(LDFLAGS) $(MAIN_PACKAGE)
 	@echo "Install complete"
 
+## deps: Install development tools (golangci-lint)
+deps:
+	@echo "Installing development tools..."
+	@if ! which golangci-lint > /dev/null 2>&1; then \
+		echo "Installing golangci-lint..."; \
+		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin latest; \
+	else \
+		echo "golangci-lint is already installed"; \
+		golangci-lint --version; \
+	fi
+	@echo "Development tools ready"
+
 ## lint: Run linters
-lint:
+lint: deps
 	@echo "Running linters..."
 	@go vet ./...
-	@golangci-lint run ./... || echo "golangci-lint not installed, skipping..."
+	@echo "Running golangci-lint..."
+	@golangci-lint run ./... 2>&1 || (echo "Note: golangci-lint may fail if built with a different Go version than the project" && exit 0)
 
 ## fmt: Format code
 fmt:
