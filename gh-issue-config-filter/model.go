@@ -116,8 +116,8 @@ type FieldUpdate struct {
 
 type IssueOutput struct {
 	Name         string       `json:"name"`
+	Title        string       `json:"title"`
 	TemplateFile *string      `json:"template_file"`
-	TitleSuffix  *string      `json:"title_suffix,omitempty"`
 	ProjectID    *string      `json:"project_id"`
 	TargetRepo   *string      `json:"target_repo"`
 	FieldUpdates []FieldUpdate `json:"field_updates"`
