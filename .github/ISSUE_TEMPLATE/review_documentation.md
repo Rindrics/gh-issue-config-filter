@@ -1,5 +1,3 @@
-# Review Documentation
-
 ## Description
 
 Quarterly review of project documentation to ensure it's up to date.
