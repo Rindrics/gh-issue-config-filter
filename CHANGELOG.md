@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.1.3](https://github.com/Rindrics/recurring-backlog-item-creator/compare/v0.1.2...v0.1.3) - 2025-11-09
+- Fix syntax by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/19
+- Remove unnecessary step by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/21
+- Fix action by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/22
+- Show project name for debugging by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/23
+- Show project ID with name by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/24
+- Show available fields on error by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/25
+- Use received token by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/26
+- Use token from GitHub App by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/27
+- Fix test workflow by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/28
+- Use GraphQL API to use project ID by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/31
+- Update issue template for testing by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/33
+
 ## [v0.1.2](https://github.com/Rindrics/recurring-backlog-item-creator/compare/v0.1.1...v0.1.2) - 2025-11-09
 - Update `README.md` by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/17
 
