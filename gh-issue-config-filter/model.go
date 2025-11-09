@@ -38,6 +38,32 @@ const (
 	December  Month = 12
 )
 
+var monthNames = map[Month]string{
+	January:   "January",
+	February:  "February",
+	March:     "March",
+	April:     "April",
+	May:       "May",
+	June:      "June",
+	July:      "July",
+	August:    "August",
+	September: "September",
+	October:   "October",
+	November:  "November",
+	December:  "December",
+}
+
+func (m Month) String() string {
+	if name, ok := monthNames[m]; ok {
+		return name
+	}
+	return "Invalid Month"
+}
+
+func (m Month) IsValid() bool {
+	return m >= January && m <= December
+}
+
 type Repo struct {
 	Owner string
 	Name  string
@@ -115,10 +141,10 @@ type FieldUpdate struct {
 }
 
 type IssueOutput struct {
-	Name         string       `json:"name"`
-	Title        string       `json:"title"`
-	TemplateFile *string      `json:"template_file"`
-	ProjectID    *string      `json:"project_id"`
-	TargetRepo   *string      `json:"target_repo"`
+	Name         string        `json:"name"`
+	Title        string        `json:"title"`
+	TemplateFile *string       `json:"template_file"`
+	ProjectID    *string       `json:"project_id"`
+	TargetRepo   *string       `json:"target_repo"`
 	FieldUpdates []FieldUpdate `json:"field_updates"`
 }

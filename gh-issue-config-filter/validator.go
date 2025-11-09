@@ -59,7 +59,7 @@ func ValidateIssueWithProject(issue Issue, defaults Defaults, ghClient GitHubCli
 	}
 
 	// Validate fields
-	if err := ValidateIssueFields(issue, fieldMap); err != nil {
+	if err := ValidateIssueFields(issue, fieldMap, projectID); err != nil {
 		return err
 	}
 
@@ -78,7 +78,7 @@ func ValidateIssue(issue Issue) error {
 	}
 
 	for i, month := range issue.CreationMonths {
-		if month < 1 || month > 12 {
+		if !month.IsValid() {
 			return fmt.Errorf("creation_months[%d]: invalid month value %d (must be 1-12)", i, month)
 		}
 	}
@@ -86,11 +86,11 @@ func ValidateIssue(issue Issue) error {
 	return nil
 }
 
-func ValidateIssueFields(issue Issue, fieldMap map[string]ProjectField) error {
+func ValidateIssueFields(issue Issue, fieldMap map[string]ProjectField, projectID string) error {
 	for fieldName, fieldValue := range issue.Fields {
 		field, exists := fieldMap[fieldName]
 		if !exists {
-			return fmt.Errorf("field '%s' does not exist in project", fieldName)
+			return fmt.Errorf("field '%s' does not exist in project %s", fieldName, projectID)
 		}
 
 		// For single-select fields, validate that the option exists

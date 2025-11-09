@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"testing"
 )
 
@@ -294,6 +295,11 @@ func (m *mockGitHubClient) GetProjectFields(ctx context.Context, projectID strin
 		return fields, nil
 	}
 	return []ProjectField{}, nil
+}
+
+func (m *mockGitHubClient) GetProjectName(ctx context.Context, projectID string) (string, error) {
+	// Return a mock project name based on projectID
+	return fmt.Sprintf("Project %s", projectID), nil
 }
 
 // newMockGitHubClient creates a mock GitHub client with fields for a single project

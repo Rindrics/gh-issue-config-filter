@@ -80,8 +80,9 @@ func generateConfigSchema() (string, error) {
 }
 
 func ParseMonth(digit int) (Month, error) {
-	if digit < 1 || digit > 12 {
+	month := Month(digit)
+	if !month.IsValid() {
 		return 0, errors.New("month must be between 1 and 12")
 	}
-	return Month(digit), nil
+	return month, nil
 }

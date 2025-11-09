@@ -45,6 +45,9 @@ func main() {
 		log.Fatalf("config validation failed: %v", err)
 	}
 
+	// Display current month
+	log.Printf("Looking for issues to be created in %s", monthEnum)
+
 	issuesToCreate := GetIssuesToCreate(config, monthEnum)
 
 	ctx := context.Background()
@@ -52,4 +55,3 @@ func main() {
 		log.Fatalf("failed to output JSON: %v", err)
 	}
 }
-
