@@ -34,13 +34,13 @@ make build
 ## Usage
 
 ```bash
-gh-issue-config-filter --month <1-12> [--config <config-file>]
+gh-issue-config-filter --month <1-12> --config <config-file>
 ```
 
 ### Options
 
 - `--month`: Month (1-12) to filter issues (required)
-- `--config`: Path to config file (default: `.gh-issue-config-filter.yml`)
+- `--config`: Path to config file (required)
 
 ## Example
 

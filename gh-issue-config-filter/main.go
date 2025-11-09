@@ -7,12 +7,10 @@ import (
 	"os"
 )
 
-const defaultConfigFile = ".gh-issue-config-filter.yml"
-
 func main() {
 	var (
 		month      = flag.Int("month", 0, "Month (1-12) to filter issues")
-		configFile = flag.String("config", "", "Path to config file")
+		configFile = flag.String("config", "", "Path to config file (required)")
 		debug      = flag.Bool("debug", false, "Enable debug logging")
 	)
 	flag.Parse()
@@ -26,7 +24,7 @@ func main() {
 
 	configPath := *configFile
 	if configPath == "" {
-		configPath = defaultConfigFile
+		log.Fatalf("config file is required. Use --config to specify a config file")
 	}
 
 	config, err := LoadConfig(configPath)
