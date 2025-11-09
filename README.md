@@ -1,101 +1,110 @@
-# gh-issue-config-filter
+# recurring-backlog-item-creator
 
-A CLI tool to filter GitHub issues based on creation months from a YAML configuration file.
+Automatically create and manage GitHub issues in your project backlog based on a YAML configuration file
+
+## Overview
+
+This repository contains:
+
+- **`gh-issue-config-filter`**: A CLI tool that filters issues from a YAML configuration file based on creation months
+- **GitHub Actions workflow**: Automatically creates issues and registers them to GitHub Projects based on the filtered results
 
 ## Motivation
 
-When managing product backlogs, you often need to create recurring issues on different schedules. Each issue type has its own creation frequency:
+When managing product backlogs, you often need to create recurring issues on different schedules.
+Each issue type has its own creation frequency:
 
 - **Monthly issues**: Security reviews, performance monitoring (created every month)
 - **Quarterly issues**: Planning sessions, roadmap reviews (created in March, June, September, December)
 - **Yearly issues**: Annual reviews, budget planning (created once a year)
 - **Custom schedules**: Any combination of specific months
 
-Manually tracking which issues to create in which month is tedious and error-prone. This tool automates the process by:
+Manually tracking which issues to create in which month is tedious and error-prone.
+This tool automates the entire process of creating issues and managing them in GitHub Projects.
 
-1. **Defining issue templates in YAML**: Configure which issues to create, their specific creation months, and what fields to set
-2. **Filtering by month**: Automatically determine which issues should be created in a given month based on their individual schedules
-3. **Integration with GitHub Actions**: Use the filtered results in your CI/CD pipeline to automatically create issues
+## Components
 
-This tool is designed to work with GitHub Projects, allowing you to automatically set project fields (like Story Points, Status, etc.) when issues are created.
+### gh-issue-config-filter
 
-## Installation
+A CLI tool that filters issues from a YAML configuration file based on the current month.
+See [`gh-issue-config-filter/README.md`](./gh-issue-config-filter/README.md) for detailed documentation.
 
-```bash
-go install github.com/Rindrics/gh-issue-config-filter@latest
+## Setup
+
+### 1. Create a configuration file
+
+Create a YAML configuration file in your repository.
+See [`config-template.yml`](./config-template.yml) for an example.
+
+### 2. Configure GitHub Variables (Optional)
+
+If you want to use a default project ID for all issues, set the following repository variable:
+
+- `PROJECT_ID`: Your GitHub Project ID (can be overridden per issue in config)
+
+> [NOTE]
+> You don't need to set IDs of project item fields (like Story Points, Status) manually
+> because they are automatically detected from field names in your configuration file
+
+### 3. Configure GitHub Token Permissions
+
+The GitHub token (`GITHUB_TOKEN` or a custom token) requires the following permissions:
+
+- **`issues: write`** - Required to create issues in the repository
+- **`projects: write`** - Required to add issues to projects and update project fields
+- **`contents: read`** - Required to read the configuration file from the repository
+
+When using `GITHUB_TOKEN` in GitHub Actions, these permissions must be explicitly granted in your workflow file:
+
+```yaml
+permissions:
+  contents: read
+  issues: write
+  projects: write
 ```
 
-Or build from source:
+> [NOTE]
+> If you're using a Personal Access Token (PAT) or a custom token, ensure it has the `repo` scope (for private repositories) or `public_repo` scope (for public repositories), which includes the necessary permissions.
 
-```bash
-make build
+### 4. Create GitHub Actions workflow
+
+Create `.github/workflows/create-monthly-issues.yml`:
+
+```yaml
+name: Create Monthly Issues
+
+on:
+  schedule:
+    # Run on the 1st day of every month at 00:00 UTC
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+  issues: write
+  projects: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create recurring backlog items
+        uses: Rindrics/recurring-backlog-item-creator@main
+        with:
+          config: '.recurrent-backlog-items.yml'
 ```
 
 ## Usage
 
-```bash
-gh-issue-config-filter --month <1-12> [--config <config-file>]
-```
+The workflow runs automatically on the 1st day of each month. You can also trigger it manually from the GitHub Actions tab.
 
-### Options
+### Inputs
 
-- `--month`: Month (1-12) to filter issues (required)
-- `--config`: Path to config file (default: `.gh-issue-config-filter.yml`)
+- `config` (required): Path to the YAML configuration file
 
-## Example
+## License
 
-```bash
-# Get issues to create in January
-gh-issue-config-filter --month 1 --config config-template.yml
-
-# Output:
-[
-  {
-    "name": "Wash My Cat",
-    "template_file": ".github/ISSUE_TEMPLATE/wash_my_cat.md",
-    "title_suffix": "- $(date +%Y-%m)",
-    "fields": {
-      "priority": "1",
-      "status": "Ready"
-    },
-    "project_id": "PVT_kwHOAOKHl84BHgin",
-    "target_repo": "Rindrics/gh-issue-config-filter"
-  }
-]
-```
-
-```bash
-# Two issues are returned for March
-gh-issue-config-filter --month 3 --config config-template.yml
-
-# Output:
-[
-  {
-    "fields": {
-      "priority": "1",
-      "status": "Ready"
-    },
-    "name": "Wash My Cat",
-    "project_id": "PVT_kwHOAOKHl84BHgin",
-    "target_repo": "Rindrics/gh-issue-config-filter",
-    "template_file": ".github/ISSUE_TEMPLATE/wash_my_cat.md",
-    "title_suffix": "- $(date +%Y-%m)"
-  },
-  {
-    "fields": {
-      "priority": "2",
-      "status": "Backlog"
-    },
-    "name": "Buy New Shoes",
-    "project_id": "other_project_id",
-    "target_repo": "other/repo",
-    "template_file": ".github/ISSUE_TEMPLATE/buy_shoes.md",
-    "title_suffix": "- $(date +%Y)"
-  }
-]
-```
-
-
-## Configuration File Format
-
-See [`config-template.yml`](./config-template.yml) for an example configuration file.
+See [LICENSE](./LICENSE) file for details.
