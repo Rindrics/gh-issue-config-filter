@@ -1,4 +1,4 @@
-module github.com/Rindrics/auto-backlog-manager/gh-issue-config-filter
+module github.com/Rindrics/recurring-backlog-item-creator/gh-issue-config-filter
 
 go 1.25.4
 
