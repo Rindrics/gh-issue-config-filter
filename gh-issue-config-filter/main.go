@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"flag"
 	"log"
 	"os"
@@ -47,28 +47,9 @@ func main() {
 
 	issuesToCreate := GetIssuesToCreate(config, monthEnum)
 
-	if err := outputJSON(issuesToCreate); err != nil {
+	ctx := context.Background()
+	if err := outputJSON(ctx, issuesToCreate, config.Defaults, ghClient); err != nil {
 		log.Fatalf("failed to output JSON: %v", err)
 	}
 }
 
-func outputJSON(issuesToCreate IssuesToCreate) error {
-	output := make([]map[string]interface{}, 0, len(issuesToCreate.Issues))
-	for _, issue := range issuesToCreate.Issues {
-		item := map[string]interface{}{
-			"name":          issue.Name,
-			"template_file": issue.TemplateFile,
-			"fields":        issue.Fields,
-			"project_id":    issue.ProjectID,
-			"target_repo":   issue.TargetRepo,
-		}
-		if issue.TitleSuffix != nil {
-			item["title_suffix"] = issue.TitleSuffix
-		}
-		output = append(output, item)
-	}
-
-	encoder := json.NewEncoder(os.Stdout)
-	encoder.SetIndent("", "  ")
-	return encoder.Encode(output)
-}

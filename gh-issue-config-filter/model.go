@@ -106,3 +106,19 @@ func (i *IssuesToCreate) Equals(other IssuesToCreate) bool {
 func (i *Issue) IsCreationMonth(month Month) bool {
 	return slices.Contains(i.CreationMonths, month)
 }
+
+type FieldUpdate struct {
+	FieldID   string  `json:"field_id"`
+	FieldType string  `json:"field_type"`
+	Value     *string `json:"value,omitempty"`
+	OptionID  *string `json:"option_id,omitempty"`
+}
+
+type IssueOutput struct {
+	Name         string       `json:"name"`
+	TemplateFile *string      `json:"template_file"`
+	TitleSuffix  *string      `json:"title_suffix,omitempty"`
+	ProjectID    *string      `json:"project_id"`
+	TargetRepo   *string      `json:"target_repo"`
+	FieldUpdates []FieldUpdate `json:"field_updates"`
+}
