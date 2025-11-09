@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.0](https://github.com/Rindrics/recurring-backlog-item-creator/compare/v0.1.3...v0.2.0) - 2025-11-09
+- Add title_prefix funtcion by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/35
+- Add sample issue by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/38
+- Correct field value by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/39
+- Set status by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/42
+
 ## [v0.1.3](https://github.com/Rindrics/recurring-backlog-item-creator/compare/v0.1.2...v0.1.3) - 2025-11-09
 - Fix syntax by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/19
 - Remove unnecessary step by @Rindrics in https://github.com/Rindrics/recurring-backlog-item-creator/pull/21
