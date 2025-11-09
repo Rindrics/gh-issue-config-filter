@@ -1,0 +1,99 @@
+name: 'Recurring Backlog Item Creator'
+description: 'Automatically create and manage GitHub issues in your project backlog based on a YAML configuration file'
+branding:
+  icon: 'repeat'
+  color: 'blue'
+
+inputs:
+  config:
+    description: 'Path to the YAML configuration file'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.25'
+
+    - name: Setup GitHub CLI
+      uses: cli/cli@gh-latest
+      with:
+        version: latest
+
+    - name: Build filter tool
+      shell: bash
+      working-directory: ./gh-issue-config-filter
+      run: make build
+
+    - name: Filter issues
+      id: filter
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        MONTH=$(date +%m | sed 's/^0//')
+        ./gh-issue-config-filter/bin/gh-issue-config-filter --month $MONTH --config "${{ inputs.config }}" > issues.json
+        echo "issues=$(cat issues.json)" >> $GITHUB_OUTPUT
+
+    - name: Create issues and register to projects
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo '${{ steps.filter.outputs.issues }}' | jq -c '.[]' | while read issue; do
+          TEMPLATE=$(echo $issue | jq -r '.template_file')
+          TITLE=$(echo $issue | jq -r '.title')
+          PROJECT_ID=$(echo $issue | jq -r '.project_id')
+          TARGET_REPO=$(echo $issue | jq -r '.target_repo')
+          
+          echo "Creating issue: $TITLE"
+          
+          # Create issue
+          ISSUE_URL=$(gh issue create \
+            --title "$TITLE" \
+            --body-file "$TEMPLATE" \
+            --repo "$TARGET_REPO" \
+            --json url --jq '.url')
+          
+          echo "Created: $ISSUE_URL"
+          
+          # Add to project
+          REPO_OWNER=$(echo "$TARGET_REPO" | cut -d'/' -f1)
+          ITEM_ID=$(gh project item-add "$PROJECT_ID" \
+            --owner "$REPO_OWNER" \
+            --url "$ISSUE_URL" \
+            --format json | jq -r '.id')
+          
+          # Set fields
+          # Process each element in field_updates array
+          echo "$issue" | jq -c '.field_updates[]?' | while read field_update; do
+            FIELD_ID=$(echo "$field_update" | jq -r '.field_id')
+            FIELD_TYPE=$(echo "$field_update" | jq -r '.field_type')
+            VALUE=$(echo "$field_update" | jq -r '.value // empty')
+            OPTION_ID=$(echo "$field_update" | jq -r '.option_id // empty')
+            
+            case "$FIELD_TYPE" in
+              "TEXT"|"NUMBER")
+                gh project item-edit \
+                  --id "$ITEM_ID" \
+                  --project-id "$PROJECT_ID" \
+                  --field-id "$FIELD_ID" \
+                  --text "$VALUE"
+                ;;
+              "SINGLE_SELECT")
+                if [ -n "$OPTION_ID" ]; then
+                  gh project item-edit \
+                    --id "$ITEM_ID" \
+                    --project-id "$PROJECT_ID" \
+                    --field-id "$FIELD_ID" \
+                    --single-select-option-id "$OPTION_ID"
+                fi
+                ;;
+            esac
+          done
+          
+          sleep 2  # Rate limit protection
+        done
+
